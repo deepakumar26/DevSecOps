@@ -1,6 +1,7 @@
 dnf install -y golang
 
 useradd -r -s /bin/false appuser
+
 mkdir -p /app
 
 cp auth-service.service /etc/systemd/system/auth-service.service
