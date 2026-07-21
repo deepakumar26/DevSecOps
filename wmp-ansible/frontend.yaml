@@ -34,3 +34,26 @@
         src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/frontend.tar.gz
         dest: /tmp/
         remote_src: yes
+
+    - name: Build the frontend application
+      ansible.builtin.shell: |
+        cd /tmp
+        npm ci
+        npm run build
+    
+    - name: Remove existing HTML files
+      ansible.builtin.file:
+        path: /usr/share/nginx/html/*.html
+        state: absent
+
+    - name: Copy the built frontend files to Nginx's HTML directory
+      ansible.builtin.copy:
+        src: /tmp/dist/*
+        dest: /usr/share/nginx/html/
+        remote_src: yes
+
+    - name: Check whether Nginx is active
+      ansible.builtin.systemd:
+        name: nginx
+        enabled: true
+        state: restarted
