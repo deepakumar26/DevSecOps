@@ -1,0 +1,54 @@
+- name: Analytics Service Setup
+  hosts: all
+  become: yes
+  tasks:
+    - name: Create appuser
+      ansible.builtin.user:
+        name: appuser
+        system: yes
+        shell: /bin/false
+
+    - name: Create /app directory
+      ansible.builtin.file:
+        path: /app
+        state: directory
+
+    - name: Install Python
+      ansible.builtin.dnf:
+        name:
+          - python3.12
+          - python3.12-pip
+          - python3.12-devel
+          - gcc
+        state: present
+
+    - name: Download and extract application
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/analytics-service.tar.gz
+        dest: /app
+        remote_src: yes
+
+    - name: Install application dependencies
+      ansible.builtin.shell: pip3.12 install --no-cache-dir .
+      args:
+        chdir: /app
+
+    - name: Set ownership
+      ansible.builtin.file:
+        path: /app
+        owner: appuser
+        group: appuser
+        recurse: yes
+        mode: 'o-rwx'
+
+    - name: Copy service file
+      ansible.builtin.copy:
+        src: analytics-service.service
+        dest: /etc/systemd/system/analytics-service.service
+
+    - name: Start analytics-service
+      ansible.builtin.systemd_service:
+        name: analytics-service
+        daemon_reload: yes
+        enabled: yes
+        state: restarted
