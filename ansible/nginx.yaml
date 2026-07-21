@@ -1,5 +1,4 @@
 - name: To install Nginx
-  hosts: webservers
   ansible.builtin.dnf:
     name: nginx
     state: latest
