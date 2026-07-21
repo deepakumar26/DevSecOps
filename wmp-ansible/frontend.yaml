@@ -5,7 +5,7 @@
   gather_facts: true
 
   tasks:
-    - name: Install node 
+    - name: Install node rpm files
       ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
     
     - name: Install Nginx & nodejs
@@ -53,7 +53,7 @@
         remote_src: yes
 
     - name: Check whether Nginx is active
-      ansible.builtin.systemd:
+      ansible.builtin.systemd_service:
         name: nginx
         enabled: true
         state: restarted
