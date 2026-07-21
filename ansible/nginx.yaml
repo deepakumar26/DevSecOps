@@ -1,7 +1,13 @@
 - name: To install Nginx
-  ansible.builtin.dnf:
-    name: nginx
-    state: latest
+
+
+
+
+  tasks:
+    - name: Install Nginx package
+      ansible.builtin.dnf:
+        name: nginx
+        state: latest
 
   # tasks:
   #   - name: Install Nginx package
