@@ -44,6 +44,17 @@
       changed_when: false
       failed_when: false
 
+    - name: Get detailed Nginx service status
+      ansible.builtin.command:
+        cmd: systemctl disable nginx --no-pager
+      register: nginx_disabled
+      changed_when: false
+      failed_when: false
+
     - name: Display detailed Nginx status
       ansible.builtin.debug:
         var: nginx_status.stdout_lines
+
+    - name: Display Nginx disabled status
+      ansible.builtin.debug:
+        var: nginx_disabled.stdout_lines
