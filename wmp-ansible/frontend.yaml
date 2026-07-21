@@ -16,7 +16,7 @@
 
     - name: Install Nginx when it is not installed
       ansible.builtin.package:
-        name: nginx
+        name: '@nginx:1.26'
         state: present
       when: "'nginx' not in ansible_facts.packages"
 
