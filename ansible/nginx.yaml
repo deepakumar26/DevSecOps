@@ -44,9 +44,9 @@
       changed_when: false
       failed_when: false
 
-    - name: Get detailed Nginx service status
+    - name: Stop Nginx service
       ansible.builtin.command:
-        cmd: systemctl disable nginx --no-pager
+        cmd: systemctl stop nginx --no-pager
       register: nginx_disabled
       changed_when: false
       failed_when: false
