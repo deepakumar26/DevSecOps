@@ -5,56 +5,15 @@
   gather_facts: true
 
   tasks:
-    # - name: Gather installed package information
-    #   ansible.builtin.package_facts:
-    #     manager: auto
-
-    # - name: Show that Nginx is already installed
-    #   ansible.builtin.debug:
-    #     msg: "Nginx is already installed. Skipping installation."
-    #   when: "'nginx' in ansible_facts.packages"
-
     - name: Install Nginx when it is not installed
       ansible.builtin.dnf:
         name: '@nginx:1.26'
         state: present
 
-    # - name: Start and enable Nginx
-    #   ansible.builtin.systemd:
-    #     name: nginx
-    #     state: started
-    #     enabled: true
-    #     daemon_reload: true
-
-    # - name: Check whether Nginx is active
-    #   ansible.builtin.command:
-    #     cmd: systemctl is-active nginx
-    #   register: nginx_active
-    #   changed_when: false
-    #   failed_when: nginx_active.rc != 0
-
-    # - name: Display Nginx active status
-    #   ansible.builtin.debug:
-    #     msg: "Nginx running status: {{ nginx_active.stdout }}"
-
-    # - name: Check whether Nginx is enabled
-    #   ansible.builtin.command:
-    #     cmd: systemctl is-enabled nginx
-    #   register: nginx_enabled
-    #   changed_when: false
-    #   failed_when: nginx_enabled.rc != 0
-
-    # - name: Display Nginx enabled status
-    #   ansible.builtin.debug:
-    #     msg: "Nginx boot status: {{ nginx_enabled.stdout }}"
-
-    # - name: Get detailed Nginx service status
-    #   ansible.builtin.command:
-    #     cmd: systemctl status nginx --no-pager
-    #   register: nginx_status
-    #   changed_when: false
-    #   failed_when: false
-
-    # - name: Display detailed Nginx status
-    #   ansible.builtin.debug:
-    #     var: nginx_status.stdout_lines
+    - name: Copy the copy file to the Nginx configuration directory
+      ansible.builtin.copy:
+        src: ./nginx.conf
+        dest: /etc/nginx/conf.d/frontend.conf
+        owner: root
+        group: root
+        mode: '0644'
