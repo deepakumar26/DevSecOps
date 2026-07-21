@@ -37,6 +37,10 @@
       ansible.builtin.debug:
         msg: "Nginx service status: {{ nginx_active.stdout }}"
 
+    - name: Display Nginx disabled status
+      ansible.builtin.debug:
+        msg: "Nginx service status: {{ nginx_disabled.stdout }}"
+
     - name: Get detailed Nginx service status
       ansible.builtin.command:
         cmd: systemctl status nginx --no-pager
