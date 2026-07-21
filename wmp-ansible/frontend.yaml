@@ -5,15 +5,32 @@
   gather_facts: true
 
   tasks:
-    - name: Install Nginx when it is not installed
+    - name: Install node 
+      ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+    
+    - name: Install Nginx & nodejs
       ansible.builtin.dnf:
-        name: '@nginx:1.26'
+        name: 
+         - '@nginx:1.26'
+         - nodejs
         state: present
 
-    - name: Copy the copy file to the Nginx configuration directory
+    - name: Update the Nginx configuration file
       ansible.builtin.copy:
-        src: ./nginx.conf
-        dest: /etc/nginx/conf.d/frontend.conf
-        owner: root
-        group: root
-        mode: '0644'
+        src: nginx.conf
+        dest: /etc/nginx/conf.d/nginx.conf
+        # owner: root
+        # group: root
+        # mode: '0644'
+    - name: Start and enable Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: true
+        daemon_reload: true
+
+    - name: Download and extract the file
+      ansible.builtin.unarchive:
+        src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/frontend.tar.gz
+        dest: /tmp/
+        remote_src: yes
