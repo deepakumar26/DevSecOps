@@ -1,0 +1,19 @@
+- name: To install Nginx
+  hosts: webservers
+  ansible.builtin.dnf:
+    name: nginx
+    state: latest
+
+  # tasks:
+  #   - name: Install Nginx package
+  #     apt:
+  #       name: nginx
+  #       state: present
+  #     notify:
+  #       - Start Nginx
+
+  # handlers:
+  #   - name: Start Nginx
+  #     service:
+  #       name: nginx
+  #       state: started
