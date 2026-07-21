@@ -1,25 +1,49 @@
-- name: To install Nginx
-
+---
+- name: Install, start, and verify Nginx
   hosts: 172.31.27.150
   become: true
-
+  gather_facts: true
 
   tasks:
-    - name: Install Nginx package
-      ansible.builtin.dnf:
+    - name: Gather installed package information
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Show that Nginx is already installed
+      ansible.builtin.debug:
+        msg: "Nginx is already installed. Skipping installation."
+      when: "'nginx' in ansible_facts.packages"
+
+    - name: Install Nginx when it is not installed
+      ansible.builtin.package:
         name: nginx
-        state: latest
+        state: present
+      when: "'nginx' not in ansible_facts.packages"
 
-  # tasks:
-  #   - name: Install Nginx package
-  #     apt:
-  #       name: nginx
-  #       state: present
-  #     notify:
-  #       - Start Nginx
+    - name: Start and enable Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: true
 
-  # handlers:
-  #   - name: Start Nginx
-  #     service:
-  #       name: nginx
-  #       state: started
+    - name: Check whether Nginx is active
+      ansible.builtin.command:
+        cmd: systemctl is-active nginx
+      register: nginx_active
+      changed_when: false
+      failed_when: nginx_active.rc != 0
+
+    - name: Display Nginx active status
+      ansible.builtin.debug:
+        msg: "Nginx service status: {{ nginx_active.stdout }}"
+
+    - name: Get detailed Nginx service status
+      ansible.builtin.command:
+        cmd: systemctl status nginx --no-pager
+      register: nginx_status
+      changed_when: false
+      failed_when: false
+
+    - name: Display detailed Nginx status
+      ansible.builtin.debug:
+        var: nginx_status.stdout_lines
