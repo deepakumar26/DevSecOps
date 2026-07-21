@@ -48,7 +48,7 @@
 
     - name: Copy the built frontend files to Nginx's HTML directory
       ansible.builtin.copy:
-        src: /tmp/dist/*
+        src: /tmp/dist/
         dest: /usr/share/nginx/html/
         remote_src: yes
 
