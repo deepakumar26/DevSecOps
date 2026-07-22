@@ -1,0 +1,49 @@
+- name: Create appuser
+  ansible.builtin.user:
+    name: appuser
+    system: yes
+    shell: /bin/false
+
+- name: Create /app directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+
+- name: Install Java
+  ansible.builtin.dnf:
+    name: java-21-openjdk-devel
+    state: present
+
+- name: Download and extract application
+  ansible.builtin.unarchive:
+    src: https://raw.githubusercontent.com/raghudevopsb88/wealth-project/main/artifacts/portfolio-service.tar.gz
+    dest: /app
+    remote_src: yes
+
+- name: Build application
+  ansible.builtin.shell: chmod +x gradlew && ./gradlew bootJar --no-daemon -x test
+  args:
+    chdir: /app
+
+- name: Copy jar file
+  ansible.builtin.shell: cp /app/build/libs/*.jar /app/portfolio-service.jar
+
+- name: Set ownership
+  ansible.builtin.file:
+    path: /app
+    owner: appuser
+    group: appuser
+    recurse: yes
+    mode: 'o-rwx'
+
+- name: Copy service file
+  ansible.builtin.copy:
+    src: portfolio-service.service
+    dest: /etc/systemd/system/portfolio-service.service
+
+- name: Start portfolio-service
+  ansible.builtin.systemd_service:
+    name: portfolio-service
+    daemon_reload: yes
+    enabled: yes
+    state: restarted

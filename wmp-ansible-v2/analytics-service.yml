@@ -1,0 +1,5 @@
+- name: Analytics Service Setup
+  hosts: all
+  become: yes
+  roles:
+    - analytics-service

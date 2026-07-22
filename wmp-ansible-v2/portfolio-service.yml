@@ -1,0 +1,5 @@
+- name: Portfolio Service Setup
+  hosts: all
+  become: yes
+  roles:
+    - portfolio-service
