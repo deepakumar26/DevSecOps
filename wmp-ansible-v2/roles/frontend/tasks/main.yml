@@ -1,5 +1,5 @@
 - name: Install NodeJS repo files
-    ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
+  ansible.builtin.shell: curl -fsSL https://rpm.nodesource.com/setup_22.x | bash -
 
 - name: Install nginx & NodeJS
   ansible.builtin.dnf:
