@@ -1,0 +1,19 @@
+- name: Set ownership
+  ansible.builtin.file:
+    path: /app
+    owner: appuser
+    group: appuser
+    recurse: yes
+    mode: 'o-rwx'
+
+- name: Copy service file
+  ansible.builtin.template:
+    src: "{{ COMPONENT }}.service"
+    dest: /etc/systemd/system/{{ COMPONENT }}.service
+
+- name: Start {{ COMPONENT }} Service
+  ansible.builtin.systemd_service:
+    name: "{{ COMPONENT }}"
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
