@@ -25,8 +25,8 @@ apps = {
       lb_internal = false
     }
     asg = {
-      min_size = 2
-      max_size = 10
+      min_size = 1
+      max_size = 2
     }
   }
 
@@ -40,8 +40,8 @@ apps = {
       lb_internal = true
     }
     asg = {
-      min_size = 2
-      max_size = 10
+      min_size = 1
+      max_size = 2
     }
   }
 
@@ -55,8 +55,8 @@ apps = {
       lb_internal = true
     }
     asg = {
-      min_size = 2
-      max_size = 10
+      min_size = 1
+      max_size = 2
     }
   }
 
@@ -70,8 +70,8 @@ apps = {
       lb_internal = true
     }
     asg = {
-      min_size = 2
-      max_size = 10
+      min_size = 1
+      max_size = 2
     }
   }
 
