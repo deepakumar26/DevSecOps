@@ -1,0 +1,5 @@
+- name: Wealth Management Portfolio Setup
+  hosts: all
+  become: yes
+  roles:
+    - "{{ COMPONENT }}"

@@ -1,0 +1,50 @@
+resource "aws_instance" "instance" {
+  for_each = var.components
+  ami = "ami-0220d79f3f480ecf5"
+  instance_type = "t3.small"
+  vpc_security_group_ids = ["sg-0a742308ff52d8d26"]
+
+  tags = {
+    Name = each.key
+  }
+}
+
+resource "aws_route53_record" "dns" {
+  for_each = var.components
+  zone_id = "Z05869702LYKRV86YR4W4"
+  name    = "${each.key}-dev"
+  type    = "A"
+  ttl     = 30
+  records = [aws_instance.instance[each.key].private_ip]
+}
+
+variable "components" {
+  default = {
+    analytics-service = ""
+    portfolio-service = ""
+    frontend = ""
+    postgresql = ""
+    auth-service = ""
+
+  }
+}
+
+resource "null_resource" "ansible" {
+
+  depends_on = [aws_route53_record.dns]
+
+  for_each = var.components
+  provisioner "remote-exec" {
+    connection {
+      type = "ssh"
+      host = aws_instance.instance[each.key].public_ip
+      user = "ec2-user"
+      password = "DevOps321"
+    }
+    inline = [
+      "sudo labauto ansible",
+      "ansible-pull -i localhost, -U https://github.com/deepakumar26/wmp-ansible-v4.git main.yml -e env=dev -e COMPONENT=${each.key}"
+    ]
+  }
+}
+
