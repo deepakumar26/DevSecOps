@@ -6,6 +6,7 @@ terraform {
     }
   }
 }
+
 resource "aws_db_parameter_group" "main" {
   name   = "wmp-${var.env}"
   family = "postgres16"
@@ -21,13 +22,12 @@ resource "aws_db_subnet_group" "main" {
 }
 
 resource "aws_security_group" "main" {
-
   name = "wmp-rds-${var.env}"
 
   ingress {
     from_port   = 5432
     to_port     = 5432
-    protocol    = "TCP"
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -41,7 +41,6 @@ resource "aws_security_group" "main" {
   tags = {
     Name = "wmp-rds-${var.env}"
   }
-
 }
 
 resource "aws_db_instance" "main" {
@@ -60,11 +59,32 @@ resource "aws_db_instance" "main" {
 }
 
 resource "null_resource" "schema_load" {
+  depends_on = [
+    aws_db_instance.main
+  ]
+
+  triggers = {
+    db_address = aws_db_instance.main.address
+    sql_file   = filesha256("${path.module}/setup.sql")
+  }
+
   provisioner "local-exec" {
-    command = <<EOF
-sudo dnf install dos2unix -y \
-curl -o global-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem PGPASSWORD='WmpUser#1234' /usr/pgsql-16/bin/psql  'host=${aws_db_instance.main.address} port=5432 dbname=default_dummy user=wmpuser sslmode=verify-full sslrootcert=./global-bundle.pem' <${path.module}/setup.sql
-EOF
+    interpreter = ["/bin/bash", "-c"]
+
+    command = <<-EOF
+      set -e
+
+      sudo dnf install -y dos2unix curl
+
+      dos2unix "${path.module}/setup.sql"
+
+      curl -fsSL \
+        -o "${path.module}/global-bundle.pem" \
+        "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem"
+
+      PGPASSWORD='WmpUser#1234' /usr/pgsql-16/bin/psql \
+        "host=${aws_db_instance.main.address} port=5432 dbname=default_dummy user=wmpuser sslmode=verify-full sslrootcert=${path.module}/global-bundle.pem" \
+        -f "${path.module}/setup.sql"
+    EOF
   }
 }
-
