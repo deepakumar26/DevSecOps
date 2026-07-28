@@ -18,32 +18,60 @@ apps = {
   frontend = {
     instance_type = "t3.small"
     ports = {
-      ssh      = 22
       frontend = 80
+    }
+    lb = {
+      port        = 80
+      lb_internal = false
+    }
+    asg = {
+      min_size = 2
+      max_size = 3
     }
   }
 
   auth-service = {
     instance_type = "t3.small"
     ports = {
-      ssh          = 22
       auth-service = 8081
+    }
+    lb = {
+      port        = 8081
+      lb_internal = true
+    }
+    asg = {
+      min_size = 2
+      max_size = 3
     }
   }
 
   portfolio-service = {
     instance_type = "t3.small"
     ports = {
-      ssh               = 22
       portfolio-service = 8080
+    }
+    lb = {
+      port        = 8080
+      lb_internal = true
+    }
+    asg = {
+      min_size = 2
+      max_size = 3
     }
   }
 
   analytics-service = {
     instance_type = "t3.small"
     ports = {
-      ssh               = 22
       analytics-service = 8000
+    }
+    lb = {
+      port        = 8000
+      lb_internal = true
+    }
+    asg = {
+      min_size = 2
+      max_size = 3
     }
   }
 
