@@ -80,7 +80,7 @@ resource "null_resource" "schema_load" {
 
       curl -fsSL \
         -o "${path.module}/global-bundle.pem" \
-        "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem"
+        "https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem" \
 
       PGPASSWORD='WmpUser#1234' /usr/pgsql-16/bin/psql \
         "host=${aws_db_instance.main.address} port=5432 dbname=default_dummy user=wmpuser sslmode=verify-full sslrootcert=${path.module}/global-bundle.pem" \
