@@ -30,6 +30,7 @@ dev-init:
 > @echo "Using AWS profile: $(AWS_PROFILE)"
 > @echo "Using AWS region: $(AWS_REGION)"
 > @echo "Working directory: $$(pwd)"
+> git pull --rebase
 > aws sts get-caller-identity
 > terraform init \
 >   -reconfigure \
@@ -64,6 +65,7 @@ prod-init:
 > @echo "Using AWS profile: $(AWS_PROFILE)"
 > @echo "Using AWS region: $(AWS_REGION)"
 > @echo "Working directory: $$(pwd)"
+> git pull --rebase
 > aws sts get-caller-identity
 > terraform init \
 >   -reconfigure \
