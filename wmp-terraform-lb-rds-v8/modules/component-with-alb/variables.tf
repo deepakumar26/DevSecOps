@@ -7,3 +7,4 @@ variable "lb" {}
 variable "subnets" {}
 variable "asg" {}
 variable "vpc_id" {}
+variable "postgres_rds_address" {}

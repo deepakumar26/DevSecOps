@@ -59,6 +59,7 @@ resource "aws_launch_template" "main" {
     {
       ENV       = var.env
       COMPONENT = var.component
+      postgres_rds_address = var.postgres_rds_address
     }
   ))
 
@@ -130,18 +131,18 @@ resource "aws_route53_record" "dns" {
   records = [aws_lb.main.dns_name]
 }
 
-resource "null_resource" "ansible" {
+# resource "null_resource" "ansible" {
 
-  provisioner "remote-exec" {
-    connection {
-      type     = "ssh"
-      host     = aws_instance.main.private_ip
-      user     = "ec2-user"
-      password = "DevOps321"
-    }
-    inline = [
-      "sudo labauto ansible",
-      "ansible-pull -i localhost, -U https://github.com/deepakumar26/wmp-ansible-rds-v5.git main.yml -e env=${var.env} -e COMPONENT=${var.component}"
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     connection {
+#       type     = "ssh"
+#       host     = aws_instance.main.private_ip
+#       user     = "ec2-user"
+#       password = "DevOps321"
+#     }
+#     inline = [
+#       "sudo labauto ansible",
+#       "ansible-pull -i localhost, -U https://github.com/deepakumar26/wmp-ansible-rds-v5.git main.yml -e env=${var.env} -e COMPONENT=${var.component}"
+#     ]
+#   }
+# }

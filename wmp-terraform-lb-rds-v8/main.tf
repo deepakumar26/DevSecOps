@@ -24,6 +24,6 @@ module "apps" {
   lb            = each.value["lb"]
   asg           = each.value["asg"]
 
-  #postgres_rds_address = module.databases["postgresql"].postgres_rds_address
+  postgres_rds_address = module.databases["postgresql"].postgres_rds_address
 }
 
