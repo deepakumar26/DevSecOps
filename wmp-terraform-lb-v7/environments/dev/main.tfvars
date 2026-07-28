@@ -1,7 +1,7 @@
 dns_domain = "cubicletocharts.cloud."
 env        = "dev"
 vpc_id     = "vpc-0c4b3099e2796acdb"
-subnets    = ["subnet-0c871903f94f5277c", "subnet-02a90961b42650018"]
+subnets    = ["subnet-06992eb1ffccccd8b", "subnet-02a90961b42650018"]
 
 databases = {
   postgresql = {
