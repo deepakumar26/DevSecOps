@@ -78,11 +78,8 @@ resource "null_resource" "schema_load" {
     command = join(" ", [
       "set -e;",
       "echo 'Installing required packages...';",
-      "sudo dnf install -y curl dos2unix;",
-      "if [ ! -x /usr/pgsql-16/bin/psql ] && ! command -v psql >/dev/null 2>&1; then sudo dnf install -y postgresql16 || sudo dnf install -y postgresql; fi;",
-      "PSQL_BIN=$(command -v psql 2>/dev/null || true);",
-      "if [ -z \"$PSQL_BIN\" ] && [ -x /usr/pgsql-16/bin/psql ]; then PSQL_BIN=/usr/pgsql-16/bin/psql; fi;",
-      "if [ -z \"$PSQL_BIN\" ]; then echo 'ERROR: PostgreSQL psql client not found'; exit 1; fi;",
+      "sudo dnf install -y curl dos2unix postgresql;",
+      "PSQL_BIN=$(command -v psql);",
       "echo \"Using psql: $PSQL_BIN\";",
       "dos2unix '${abspath(path.module)}/setup.sql';",
       "curl -fsSL -o '${abspath(path.module)}/global-bundle.pem' 'https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem';",
