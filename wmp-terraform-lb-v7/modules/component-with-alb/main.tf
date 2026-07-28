@@ -71,7 +71,7 @@ resource "aws_launch_template" "main" {
 }
 
 resource "aws_autoscaling_group" "main" {
-  availability_zones = ["us-east-1a", "us-east-1e"]
+  availability_zones = ["us-east-1a", "us-east-1b"]
   desired_capacity   = var.asg["min_size"]
   max_size           = var.asg["min_size"]
   min_size           = var.asg["min_size"]
